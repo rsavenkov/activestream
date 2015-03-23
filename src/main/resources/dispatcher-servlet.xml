@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:component-scan base-package="com.springapp.mvc"/>
+
+  <mvc:annotation-driven/>
+
+  <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+  <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <list>
+        <ref bean="jacksonMessageConverter"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPath" value="/templates/"/>
+    <property name="defaultEncoding" value="utf-8"/>
+    <property name="freemarkerSettings">
+      <props>
+        <prop key="locale">ru_RU</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="htmlViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+    <property name="cache" value="true"/>
+    <property name="prefix" value=""/>
+    <property name="suffix" value=".ftl"/>
+    <property name="contentType" value="text/html; charset=UTF-8"/>
+  </bean>
+
+  <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+    <property name="contextPath" value="com.springapp.mvc.wsdl"/>
+  </bean>
+
+  <bean class="com.springapp.mvc.ServiceClient">
+    <property name="defaultUri" value="http://188.166.5.154:8080/micro/service/service.wsdl"/>
+    <property name="marshaller" ref="marshaller"/>
+    <property name="unmarshaller" ref="marshaller"/>
+    <property name="login" value="USER@MICRO.com"/>
+    <property name="password" value="1"/>
+  </bean>
+
+</beans>
