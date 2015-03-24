@@ -29,8 +29,8 @@ public class IndexController {
 			String session = authResult.getSession();
 			final GetCityResponse result = client.getCities(session);
 			return new HashMap() {{ put("result", result.getCity());}};
-		} catch (Exception e) {
-			return new HashMap() {{ put("error", "Some error explanation from .properties file");}};
+		} catch (final Exception e) {
+			return new HashMap() {{ put("error", e.getLocalizedMessage());}};
 		}
 	}
 
